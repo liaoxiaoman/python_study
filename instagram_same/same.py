@@ -122,4 +122,4 @@ def upload_mv():
         except:
             txt = ''
         same_api(artwork, txt, file)
-upload_mv()
+# upload_mv()
