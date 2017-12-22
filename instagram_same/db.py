@@ -16,7 +16,7 @@ class fields:
 class db_api:
 
     def __init__(self):
-        self.db = 'test.db'
+        self.db = 'instagram.db'
 
     def create_table(self, table):
         conn = sqlite3.connect(self.db)
@@ -49,7 +49,7 @@ class db_api:
         values_str = "(%d"%seq
         for k in values:
             fields_str += ","+k
-            values_str += ",'"+values[k]+"'" if type(values[k]) == str else ","+str(values[k])
+            values_str += ",'"+values[k].replace("'", "''")+"'" if type(values[k]) == str or type(values[k]) == unicode else ","+str(values[k]).replace("'", "''")
         fields_str += ")"
         values_str += ")"
         sql_str = "INSERT INTO " + table + " " + fields_str + " VALUES " + values_str + ";"
