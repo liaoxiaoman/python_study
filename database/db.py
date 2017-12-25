@@ -18,6 +18,12 @@ class db_api:
     def __init__(self):
         self.db = 'test.db'
 
+    def get_all_table(self):
+        conn = sqlite3.connect(self.db)
+        exist_c = conn.cursor()
+        exist_c.execute("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;")
+        return exist_c.fetchall()
+
     def create_table(self, table):
         conn = sqlite3.connect(self.db)
         exist_c = conn.cursor()
