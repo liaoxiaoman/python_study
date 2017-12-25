@@ -49,7 +49,7 @@ class db_api:
         values_str = "(%d"%seq
         for k in values:
             fields_str += ","+k
-            values_str += ",'"+values[k]+"'" if type(values[k]) == str else ","+str(values[k])
+            values_str += ",'"+values[k].replace("'", "''")+"'" if type(values[k]) == str or type(values[k]) == unicode else ","+str(values[k]).replace("'", "''")
         fields_str += ")"
         values_str += ")"
         sql_str = "INSERT INTO " + table + " " + fields_str + " VALUES " + values_str + ";"
@@ -58,7 +58,6 @@ class db_api:
         conn.close()
         print "Record insert successfully"
         return True
-
 
     def search(self, table, co=None):
         conn = sqlite3.connect(self.db)
