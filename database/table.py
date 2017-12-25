@@ -19,5 +19,5 @@ db_api.create_table(table_seq())
 db_api.create_table(table())
 
 # db_api.insert('people2', {'name': 'liaoxiaoman', 'age': 25})
-result = db_api.search('people2')
+# result = db_api.search('people2')
 pass

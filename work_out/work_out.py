@@ -14,22 +14,24 @@ def index():
     ]
     all_tables = db_api.get_all_table()
     for table in all_tables:
-        tables.append({'url': table[0], 'name': table[0]})
+        tables.append({'url': '/table/'+table[0], 'name': table[0]})
     return render_template('index.html', tables=tables)
 
-@app.route('/<table_name>')
+@app.route('/table/<table_name>')
 def rows(table_name):
     rows = []
-    header = []
+    header = ['ID']
     all_rows = db_api.search(table_name)
     if all_rows:
         for row in all_rows:
-            row_list = []
+            row_list = [row['ID']]
             for i in row:
-                row_list.append(row[i])
+                if i != 'ID':
+                    row_list.append(row[i])
             rows.append(row_list)
         for i in all_rows[0]:
-            header.append(i)
+            if i != 'ID':
+                header.append(i)
     return render_template('rows.html', table_name=table_name, header=header, rows=rows)
 
 @app.route('/user/<name>')
