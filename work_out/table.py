@@ -13,7 +13,7 @@ class table_user:
     sql_str_list = [
         fields.char('name', required=True),
         fields.integer('age'),
-        fields.integer('gender'),
+        fields.char('gender'),
     ]
 class table_part:
     _name = 'part'
