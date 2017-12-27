@@ -74,9 +74,9 @@ class db_api:
         conn.commit()
         conn.close()
         print "Record insert successfully"
-        return True
+        return seq
 
-    def search(self, table, co=None):
+    def search(self, table, co=[]):
         conn = sqlite3.connect(self.db)
         c = conn.cursor()
         c.execute("PRAGMA  table_info([%s]);"%table)
@@ -87,7 +87,13 @@ class db_api:
 
         sql_str = "SELECT * FROM " + table
         if co:
-            pass
+            sql_str += " WHERE"
+            for i in range(0, len(co)):
+                if i != 0:
+                    sql_str += " AND"
+                v = "'%s'"%co[i][2] if type(co[i][2]) == str or type(co[i][2]) == unicode else "%s"%co[i][2]
+                sql_str += " %s %s %s" % (co[i][0], co[i][1], v)
+
         c.execute(sql_str)
         records = c.fetchall()
         result = []
