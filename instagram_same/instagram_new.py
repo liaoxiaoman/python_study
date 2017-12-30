@@ -130,7 +130,7 @@ if __name__ == '__main__':
     # 对ret中的元素按date排序
     if len(ret) > 1:
         ret = make_sort(ret)
-    print ret
+    print '', datetime.datetime.now(), ret
     for j in ret:
         # 下载图片并写入
         ss = requests.session()
