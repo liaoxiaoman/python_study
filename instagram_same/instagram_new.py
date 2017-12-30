@@ -34,7 +34,7 @@ def crawl():
     result = []
     click.echo('start')
     try:
-        res = requests.get(BASE_URL+USER, headers=headers, proxies=proxy)
+        res = requests.get(BASE_URL+USER, headers=headers)
         html = etree.HTML(res.content)
         all_a_tags = html.xpath('//script[@type="text/javascript"]/text()')
         for a_tag in all_a_tags:
@@ -53,7 +53,7 @@ def crawl():
                     # ------尝试获取mp4url------
                     try:
                         mp4_url = '/p/'+node["code"]+'/?taken-by='+uid
-                        res = requests.get(BASE_URL+mp4_url, headers=headers, proxies=proxy)
+                        res = requests.get(BASE_URL+mp4_url, headers=headers)
                         html = etree.HTML(res.content)
                         all_a_tags = html.xpath('//script[@type="text/javascript"]/text()')
                         for a_tag in all_a_tags:
@@ -75,7 +75,7 @@ def crawl():
                     jso["after"] = end_cursor
                     text = json.dumps(jso)
                     url = NEXT_URL.format(query_id, text)
-                    res = requests.get(url, headers=headers, proxies=proxy)
+                    res = requests.get(url, headers=headers)
                     time.sleep(2)
                     html = json.loads(res.content.decode(), encoding='utf-8')
                     has_next = html["data"]["user"]["edge_owner_to_timeline_media"]["page_info"]["has_next_page"]
@@ -94,7 +94,7 @@ def crawl():
         raise e
 def get_query_id():
     # 请求query_id
-    res = requests.get(BASE_URL+USER, headers=headers, proxies=proxy)
+    res = requests.get(BASE_URL+USER, headers=headers)
     html = etree.HTML(res.content)
     query_id_url = html.xpath('//script[@crossorigin="anonymous"]/@src')  # query_id 作为内容加载
     click.echo(query_id_url)
@@ -105,7 +105,7 @@ def get_query_id():
     if not js_url:
         print 'instagram 的某个common.js获取失败!!'
         return False
-    query_content = requests.get(BASE_URL + js_url, headers=headers, proxies=proxy)
+    query_content = requests.get(BASE_URL + js_url, headers=headers)
     query_id_list = PAT.findall(query_content.text)
     for u in query_id_list:
         click.echo(u)
@@ -134,8 +134,8 @@ if __name__ == '__main__':
     for j in ret:
         # 下载图片并写入
         ss = requests.session()
-        video = ss.get(j['video'], proxies=proxy).content if 'video' in j.keys() else None
-        pic = ss.get(j['pic'], proxies=proxy).content
+        video = ss.get(j['video']).content if 'video' in j.keys() else None
+        pic = ss.get(j['pic']).content
         txt = j['txt'] +'\r\n\r\n' + u"teddysphotos' instagram\r\n" + str(datetime.datetime.fromtimestamp(j['date']))
         result = same.same_api(pic, txt, video)
         # 成功写入same
