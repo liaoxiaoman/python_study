@@ -122,35 +122,6 @@ def make_sort(ret):
         new_ret.insert(seq, i)
     return new_ret
 
-# if __name__ == '__main__':
-#     result = crawl()
-#     teddy_file = open('./instagram_teddy.txt', 'r')
-#     done = eval(teddy_file.read())
-#     done_date = [j['date'] for j in done]
-#     teddy_file.close()
-#     ret = [i for i in result if i['date'] not in done_date]  # 将要写入的动态
-#     # 对ret中的元素按date排序
-#     if len(ret) > 1:
-#         ret = make_sort(ret)
-#     print ret
-#     for j in ret:
-#         # 下载图片并写入
-#         ss = requests.session()
-#         video = ss.get(j['video'], proxies=proxy).content if 'video' in j.keys() else None
-#         pic = ss.get(j['pic'], proxies=proxy).content
-#         txt = j['txt'] +'\r\n\r\n' + u"teddysphotos' instagram\r\n" + str(datetime.datetime.fromtimestamp(j['date']))
-#         result = same.same_api(pic, txt, video)
-#         # 成功写入same
-#         if result == True:
-#             done.append(j)
-#             teddy_file_new = open('./instagram_teddy.txt', 'w')
-#             teddy_file_new.write(str(done))
-#             teddy_file_new.close()
-#             print str(datetime.datetime.fromtimestamp(j['date']))
-#         else:
-#             print '写入same失败'
-#             break
-
 if __name__ == '__main__':
     result = crawl()
     done = db_api.search('instagram_teddy')
