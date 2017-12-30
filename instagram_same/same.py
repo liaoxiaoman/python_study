@@ -16,7 +16,7 @@ cj = ''
 login_url = 'http://v2.same.com/user/login'
 uptoken_url = 'http://v2.same.com/qiniu/token'
 upload_pic_url = 'http://upload.qiniu.com'
-test_data = {'push_token': '', 'password': '6767285lxm', 'mobile': '+86-13260175913', 'format': 'json', 'device': '2D6C406A-EC81-4CB4-7B2A7D832252'}
+test_data = {'push_token': '', 'password': '6767285lxm', 'mobile': '+86-18222930521', 'format': 'json', 'device': '2D6C406A-EC81-4CB4-7B2A7D832252'}
 # channel_id = 1597837  # test
 channel_id = 1600220  # teddy
 
