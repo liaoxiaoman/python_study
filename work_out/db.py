@@ -3,7 +3,7 @@
 import sqlite3
 
 class fields:
-    def char(self, field=None, required=False):
+    def char(self, field=None, required=False, unique=False):
         res = ',%s TEXT'%field
         if required == True:
             res += ' NOT NULL'
