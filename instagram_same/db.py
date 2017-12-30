@@ -16,7 +16,7 @@ class fields:
 class db_api:
 
     def __init__(self):
-        self.db = 'instagram.db'
+        self.db = '/home/ubuntu/python_study/instagram_same/instagram.db'
 
     def create_table(self, table):
         conn = sqlite3.connect(self.db)
