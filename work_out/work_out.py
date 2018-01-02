@@ -9,45 +9,42 @@ import json
 
 app = Flask(__name__)
 
-@app.route('/')
-def index():
-    users = []
-    all_users = db_api.search('user')
-    for user in all_users:
-        users.append({'url': '/user/' + str(user['ID']), 'name': user['name']})
-    return render_template('index.html', users=users, page='1')
-
-@app.route('/create_user', methods=['POST'])
-def create_user():
+@app.route('/', methods=['POST', 'GET'])
+def login():
     if request.method == 'POST':
         datax = request.form.to_dict()
-        content = str(datax)
-        resp = Response(content)
-        users = []
-        all_users = db_api.search('user')
-        for user in all_users:
-            users.append({'url': '/user/' + str(user['ID']), 'name': user['name']})
-        return render_template('index.html', users=users, page='1')
+        user = db_api.search('user', [('name', '=', datax['name']), ('password', '=', datax['password'])])
+        if not user:
+            content = json.dumps({"success": False, 'data': {"reason": '用户名密码错误。'}})
+            return Response(content)
+        content = json.dumps({"success": True, 'data': {"uid": user[0]['ID'], 'token': 'test'}})
+        return Response(content)
+    elif request.method == 'GET':
+        return render_template('login.html')
 
+@app.route('/signup', methods=['POST'])
+def signup():
+    if request.method == 'POST':
+        datax = request.values.to_dict()
+        user = db_api.search('user', [('name', '=', datax['name'])])
+        if user:
+            content = json.dumps({"success": False, 'data': {"reason": 'this user is already existed.'}})
+            return Response(content)
+        else:
+            user_id = db_api.insert('user', {'name': datax['name'], 'password': datax['password']})
+            content = json.dumps({'success': True, 'data': {'user': user_id}})
+            return Response(content)
     else:
-        content = json.dumps({"error_code":"1001"})
+        content = json.dumps({"success": False, 'data': {"reason": '不是post方法提交'}})
         resp = Response(content)
         return resp
 
-
-
-# @app.route('/create_user/<name>/<gender>/<age>')
-# def create_user(name, gender, age):
-#     user_id = db_api.insert('user', {'name': name, 'age': age, 'gender': gender})
-#     user = db_api.search('user', [('id', '=', user_id)])[0]
-#     parts = db_api.search('part', [('user', '=', user_id)])
-#     parts_list = []
-#     for part in parts:
-#         parts_list.append(part)
-#     return render_template('index.html', parts=parts_list, user=user, page='2')
-
-@app.route('/user/<user_id>')
-def users(user_id):
+# 首页
+@app.route('/index')
+def index():
+    data = request.values.to_dict()
+    user_id = data['uid']
+    token = data['token']
     user = db_api.search('user', [('id', '=', user_id)])[0]
     parts = db_api.search('part', [('user', '=', user_id)])
     parts_list = []
@@ -87,4 +84,4 @@ def create_item(part_id, name):
 
 
 if __name__ == '__main__':
-    app.run(debug=True, port=8888)
+    app.run(debug=True, port=8069)

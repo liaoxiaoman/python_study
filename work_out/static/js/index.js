@@ -33,3 +33,9 @@
             new_name = prompt("请输入新建动作名称:","引体向上");
             res = self.post('/create_item', {'part_id': part_id, 'name': new_name})
         }
+
+        $(document).ready(function(){
+            $("#a_signup").click(function(){
+                $('#login').hide();
+            });
+        });

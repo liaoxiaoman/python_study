@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css"></link>
+    <link rel="stylesheet" type="text/css" href="/static/css/font-awesome.min.css"></link>
+    <link rel="stylesheet" type="text/css" href="/static/css/login.css"></link>
+    <script type="text/javascript" src="/static/js/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.form.js"></script>
+    <script type="text/javascript" src="/static/js/login.js"></script>
+</head>
+<body>
+
+    <div id="login" class="demo" style="padding: 20px 0;">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-offset-3 col-md-6">
+                    <form class="form-horizontal">
+                        <span class="heading">用户登录</span>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="name" placeholder="账  号">
+                            <i class="fa fa-user"></i>
+                        </div>
+                        <div class="form-group help">
+                            <input type="password" class="form-control" id="password" placeholder="密　码">
+                            <i class="fa fa-lock"></i>
+                        </div>
+                        <div class="form-group">
+                            <a id="a_signup" class="btn btn-default">注册</a>
+                            <a id="login_submit" class="btn btn-default">登录</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="display:none;" id="signup" class="demo" style="padding: 20px 0;">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-offset-3 col-md-6">
+                    <form class="form-horizontal">
+                        <span class="heading">用户登录</span>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="signup_name" placeholder="账  号">
+                            <i class="fa fa-user"></i>
+                        </div>
+                        <div class="form-group help">
+                            <input type="password" class="form-control" id="signup_password" placeholder="密　码">
+                            <i class="fa fa-lock"></i>
+                        </div>
+                        <div class="form-group help">
+                            <input type="password" class="form-control" id="signup_re_password" placeholder="确  认  密　码">
+                            <i class="fa fa-lock"></i>
+                        </div>
+                        <div class="form-group">
+                            <p id="error_info" style="display:none;color:red;"></p>
+                            <a id="back_login" class="btn btn-default">返回登录</a>
+                            <a id="signup_submit" class="btn btn-default">确定</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

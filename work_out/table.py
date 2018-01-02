@@ -12,6 +12,7 @@ class table_user:
     _name = 'user'
     sql_str_list = [
         fields.char('name', required=True),
+        fields.char('password', required=True),
         fields.integer('age'),
         fields.char('gender'),
     ]
