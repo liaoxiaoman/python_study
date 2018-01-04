@@ -96,4 +96,4 @@ def create_item(part_id, name):
 
 
 if __name__ == '__main__':
-    app.run(debug=True, port=8069)
+    app.run(host='0.0.0.0', debug=True, port=8888)
