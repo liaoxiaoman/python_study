@@ -105,7 +105,18 @@ class db_api:
         conn.close()
         return result
 
-
+    def update(self, table, record_id, values):
+        conn = sqlite3.connect(self.db)
+        c = conn.cursor()
+        change_sql = ''
+        for i in values:
+            change_sql += " %s = '%s',"%(i, values[i])
+        sql_str = "UPDATE %s SET %s WHERE ID = %d" % (table, change_sql[:-1], record_id)
+        c.execute(sql_str)
+        conn.commit()
+        conn.close()
+        print "Record update successfully"
+        return True
 
 
 db_api = db_api()

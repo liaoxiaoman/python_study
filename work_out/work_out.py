@@ -6,9 +6,11 @@ from db import db_api
 from flask import request
 from flask import make_response,Response
 import json
+import random
 
 app = Flask(__name__)
 
+# 登陆
 @app.route('/', methods=['POST', 'GET'])
 def login():
     if request.method == 'POST':
@@ -17,22 +19,26 @@ def login():
         if not user:
             content = json.dumps({"success": False, 'data': {"reason": '用户名密码错误。'}})
             return Response(content)
-        content = json.dumps({"success": True, 'data': {"uid": user[0]['ID'], 'token': 'test'}})
+        cookie = str(random.randint(1111111111,9999999999))
+        db_api.update('user', user[0]['ID'], {'cookie': cookie})
+        content = json.dumps({"success": True, 'data': {"uid": user[0]['ID'], 'cookie': cookie}})
         return Response(content)
     elif request.method == 'GET':
         return render_template('login.html')
 
+# 注册
 @app.route('/signup', methods=['POST'])
 def signup():
     if request.method == 'POST':
         datax = request.values.to_dict()
         user = db_api.search('user', [('name', '=', datax['name'])])
         if user:
-            content = json.dumps({"success": False, 'data': {"reason": 'this user is already existed.'}})
+            content = json.dumps({"success": False, 'data': {"reason": '该用户名已经被注册了。'}})
             return Response(content)
         else:
-            user_id = db_api.insert('user', {'name': datax['name'], 'password': datax['password']})
-            content = json.dumps({'success': True, 'data': {'user': user_id}})
+            cookie = str(random.randint(1111111111, 9999999999))
+            user_id = db_api.insert('user', {'name': datax['name'], 'password': datax['password'], 'cookie': cookie})
+            content = json.dumps({'success': True, 'data': {'uid': user_id, 'cookie': cookie}})
             return Response(content)
     else:
         content = json.dumps({"success": False, 'data': {"reason": '不是post方法提交'}})
@@ -42,9 +48,15 @@ def signup():
 # 首页
 @app.route('/index')
 def index():
+    uid = request.cookies.get('the_work_out_uid')
+    cookie = request.cookies.get('the_work_out_cookie')
+    if uid and cookie:
+        if not db_api.search('user', [('ID', '=', int(uid)), ('cookie', '=', cookie)]):
+            return render_template('login.html')
+    else:
+        return render_template('login.html')
     data = request.values.to_dict()
     user_id = data['uid']
-    token = data['token']
     user = db_api.search('user', [('id', '=', user_id)])[0]
     parts = db_api.search('part', [('user', '=', user_id)])
     parts_list = []

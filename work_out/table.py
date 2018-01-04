@@ -15,6 +15,7 @@ class table_user:
         fields.char('password', required=True),
         fields.integer('age'),
         fields.char('gender'),
+        fields.char('cookie'),
     ]
 class table_part:
     _name = 'part'
