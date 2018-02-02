@@ -7,6 +7,7 @@ from flask import request
 from flask import make_response,Response
 import json
 import random
+import datetime, time
 
 app = Flask(__name__)
 
@@ -64,36 +65,110 @@ def index():
         parts_list.append(part)
     return render_template('index.html', parts=parts_list, user=user, page='2')
 
-@app.route('/create_part/<user_id>/<name>')
-def create_part(user_id, name):
-    part_id = db_api.insert('part', {'user': user_id, 'name': name})
-    part = db_api.search('part', [('id', '=', part_id)])[0]
-    items = db_api.search('item', [('part', '=', part_id)])
-    items_list = []
-    for item in items:
-        items_list.append(item)
-    return render_template('index.html', items=items_list, part=part, page='3')
+# 健身记录 近五天
+@app.route('/work_out')
+def work_out():
+    data = {}
+    uid = request.cookies.get('the_work_out_uid')
+    if uid:
+        first_page_href = '/index?uid='+uid
+        data['first_page_href'] = first_page_href
+    return render_template('work_out.html', data=data)
 
-@app.route('/part/<part_id>')
-def parts(part_id):
-    part = db_api.search('part', [('id', '=', part_id)])[0]
-    items = db_api.search('item', [('part', '=', part_id)])
-    items_list = []
-    for item in items:
-        items_list.append(item)
-    return render_template('index.html', items=items_list, part=part, page='3')
+# 某日详细记录
+@app.route('/get_details')
+def get_details():
+    datax = request.values.to_dict()
+    data = {}
+    uid = request.cookies.get('the_work_out_uid')
+    if uid:
+        first_page_href = '/index?uid='+uid
+        data['first_page_href'] = first_page_href
+    return render_template('details.html', data=data)
 
-@app.route('/create_item/<part_id>/<name>')
-def create_item(part_id, name):
-    item_id = db_api.insert('item', {'part': part_id, 'name': name})
-    part = db_api.search('part', [('id', '=', part_id)])[0]
-    items = db_api.search('item', [('part', '=', part_id)])
-    items_list = []
-    for item in items:
-        items_list.append(item)
-    return render_template('index.html', items=items_list, part=part, page='3')
+# 开始记录
+@app.route('/start_record')
+def start_record():
+    data = {}
+    uid = request.cookies.get('the_work_out_uid')
+    if uid:
+        first_page_href = '/index?uid='+uid
+        data['first_page_href'] = first_page_href
+        data['uid'] = uid
+        parts = db_api.search('part', [('user', '=', uid)])
+        data['parts'] = parts
+    return render_template('records.html', data=data)
 
+@app.route('/create_part', methods=['POST', 'GET'])
+def create_part():
+    datax = request.values.to_dict()
+    db_api.insert('part', {'user': datax['user_id'], 'name': datax['name']})
+    return start_record()
 
+# 选择部位
+@app.route('/select_part/<part_id>')
+def select_part(part_id):
+    data = {}
+    uid = request.cookies.get('the_work_out_uid')
+    if uid:
+        first_page_href = '/index?uid='+uid
+        data['first_page_href'] = first_page_href
+        data['uid'] = uid
+        data['part_id'] = part_id
+        items = db_api.search('item', [('part', '=', part_id)])
+        data['item_lists'] = items
+    return render_template('parts.html', data=data)
+
+@app.route('/create_item', methods=['POST', 'GET'])
+def create_item():
+    datax = request.values.to_dict()
+    db_api.insert('item', {'part': datax['part_id'], 'name': datax['name']})
+    return select_part(datax['part_id'])
+
+def make_sort(ret):
+    new_ret = []
+    for i in ret:
+        seq = 0
+        for j in new_ret:
+            if i['datetime'] < j['datetime']:
+                break
+            seq += 1
+        new_ret.insert(seq, i)
+    return new_ret
+
+# 选择动作
+@app.route('/select_item/<item_id>')
+def select_item(item_id):
+    data = {}
+    uid = request.cookies.get('the_work_out_uid')
+    if uid:
+        first_page_href = '/index?uid='+uid
+        data['first_page_href'] = first_page_href
+        data['uid'] = uid
+        data['item_id'] = item_id
+        min = datetime.datetime.combine(datetime.date.today(), datetime.time.min)
+        max = datetime.datetime.combine(datetime.date.today(), datetime.time.max)
+        records = db_api.search('record', [('item', '=', item_id), ('datetime', '>', time.mktime(min.timetuple())), ('datetime', '<', time.mktime(max.timetuple()))])
+        if len(records) > 1:
+            records = make_sort(records)
+        index = 1
+        total = 0.0
+        for r in records:
+            r['index'] = index
+            total += r['total']
+            index += 1
+        data['record_lists'] = records
+        data['total'] = total
+    return render_template('items.html', data=data)
+
+@app.route('/create_record', methods=['POST', 'GET'])
+def create_record():
+    datax = request.values.to_dict()
+    weight = float(datax['weight'])
+    count = int(datax['count'])
+    now = datetime.datetime.now()
+    db_api.insert('record', {'item': datax['item_id'], 'weight': weight, 'count': count, 'total': weight*count, 'datetime': time.mktime(now.timetuple())})
+    return select_item(datax['item_id'])
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True, port=8888)

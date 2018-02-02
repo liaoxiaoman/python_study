@@ -1,0 +1,80 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title></title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="/static/css/main.css" />
+</head>
+<body>
+
+<!-- Header -->
+<header id="header">
+	<a href="" class="logo"><strong>M</strong></a>
+	<nav>
+		<a href="#menu">菜单</a>
+	</nav>
+</header>
+
+<!-- Nav -->
+<nav id="menu">
+	<ul class="links">
+		<li><a href="{{ data.first_page_href }}">主页</a></li>
+	</ul>
+</nav>
+
+<!-- Main -->
+<section id="main">
+    <div class="inner">
+        <section>
+            <h3>今日训练量：</h3>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>重量（kg）</th>
+                            <th>次数</th>
+                            <th>训练总量</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in data.record_lists %}
+                            <tr>
+                                <td>{{ record.index }}</td>
+                                <td>{{ record.weight }}</td>
+                                <td>{{ record.count }}</td>
+                                <td>{{ record.total }}</td>
+                            </tr>
+                        {% endfor %}
+                    <tfoot>
+                        <tr>
+                            <td colspan="3"></td>
+                            <td>{{ data.total }}</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div style="margin-left: 20%;">
+                <input type="number" name="weight" id="weight" placeholder="重量（kg）"/>
+                <input type="number" name="count" id="count" placeholder="次数"/>
+                <div class="6u$" style="margin-top: 10px; margin-left: 15%;">
+                    <ul class="actions">
+                        <li><input type="button" onclick="create_record({{data.item_id}})" value="添加" class="special"/></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+	</div>
+</section>
+
+<!-- Scripts -->
+<script src="/static/js/jquery-3.2.1.min.js"></script>
+<script src="/static/js/jquery.scrolly.min.js"></script>
+<script src="/static/js/skel.min.js"></script>
+<script src="/static/js/util.js"></script>
+<script src="/static/js/main.js"></script>
+<script src="/static/js/index.js"></script>
+
+</body>
+</html>

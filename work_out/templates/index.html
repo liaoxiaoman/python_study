@@ -1,66 +1,194 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html>
 <head>
-    <meta charset="utf-8" />
-    <title>每日运动量记录</title>
-    <script type="text/javascript" src="/static/js/jquery-3.2.1.min.js"></script>
-    <script type="text/javascript" src="/static/js/jquery.form.js"></script>
-    <script type="text/javascript" src="/static/js/index.js"></script>
-    <link rel="stylesheet" type="text/css" href="/static/css/index.css"></link>
+<title>Home</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="/static/css/main.css" />
 </head>
 <body>
-    <!--用户选择-->
-    {% if page=='1' %}
-    <h1>所有的用户：</h1>
-    <p><a href="javascript:void(0)" onclick="$('#create_user_form').show();">新建用户</a></p>
-    <form id="create_user_form" action="/create_user" method="post">
-        姓名: <input type="text" name="name" />
-        性别: <input type="text" name="gender" />
-        年龄: <input type="text" name="age" />
-        <input type="submit" value="提交" />
-    </form>
-    {% for user in users %}
-    <p><a href="{{user.url}}">{{user.name}}</a></p>
-    {% endfor %}
 
-    <!--部位选择-->
-    {% elif page=='2' %}
-    <a href="/">首页</a>
-    <br/>
-    <br/>
-    <p><a href="javascript:void(0)" onclick="create_part({{user.ID}})">新建部位</a></p>
-    <br/>
-    <br/>
-    <span style="">{{user.name}}</span>
-    <br/>
-    <br/>
-    <span>
-        {% for part in parts %}
-        <a href="/part/{{part.ID}}">{{part.name}}</a>
-        <br/>
-        <br/>
-        {% endfor %}
-    </span>
+<!-- Header -->
+<header id="header">
+	<a href="#" class="logo"><strong>M</strong></a>
+	<nav>
+		<a href="#menu">菜单</a>
+	</nav>
+</header>
 
-    <!--动作选择-->
-    {% elif page=='3' %}
-    <a href="/">首页</a>
-    <br/>
-    <br/>
-    <p><a href="javascript:void(0)" onclick="create_item({{part.ID}})">新建动作</a></p>
-    <br/>
-    <br/>
-    <span style="">部位：{{part.name}}</span>
-    <br/>
-    <br/>
-    <span>
-        {% for item in items %}
-        <a href="/item/{{item.ID}}">{{item.name}}</a>
-        <br/>
-        <br/>
-        {% endfor %}
-    </span>
-    {% endif %}
+<!-- Nav -->
+<nav id="menu">
+	<ul class="links">
+		<li><a href="/work_out">健身记录</a></li>
+		<li><a href="/">注销</a></li>
+	</ul>
+</nav>
+
+<!-- Banner -->
+<section id="banner">
+	<div class="inner">
+		<h1>This is ChinaZ, a free and fully responsive<br/>
+		website template TEMPLATED</h1>
+		<ul class="actions">
+			<li><a href="#one" class="button alt scrolly big">Continue</a></li>
+		</ul>
+	</div>
+</section>
+
+<!-- One -->
+<article id="one" class="post style1">
+	<div class="image">
+		<img src="/static/images/pic14.jpg" alt="" data-position="75% center" />
+	</div>
+	<div class="content">
+		<div class="inner">
+			<header>
+				<h2><a href="generic.html">Ipsum lorem sed magna</a></h2>
+				<p class="info">3 days ago by <a href="#">Jane Doe</a></p>
+			</header>
+			<p>Nullam posuere erat vel placerat rutrum. Praesent ac consectetur dui, et congue quam. Donec aliquam lacinia condimentum. Integer porta massa sapien, commodo sodales diam suscipit vitae. Aliquam quis felis sed urna semper semper. Phasellus eu scelerisque mi. Vivamus aliquam nisl libero, sit amet scelerisque ligula laoreet vel.</p>
+			<ul class="actions">
+				<li><a href="generic.html" class="button alt">Read More</a></li>
+			</ul>
+		</div>
+		<div class="postnav">
+			<a href="#" class="prev disabled"><span class="icon fa-chevron-up"></span></a>
+			<a href="#two" class="scrolly next"><span class="icon fa-chevron-down"></span></a>
+		</div>
+	</div>
+</article>
+
+<!-- Two -->
+<article id="two" class="post invert style1 alt">
+	<div class="image">
+		<img src="/static/images/pic13.jpg" alt="" data-position="10% center" />
+	</div>
+	<div class="content">
+		<div class="inner">
+			<header>
+				<h2><a href="generic.html">Donec ex risus mollis</a></h2>
+				<p class="info">3 days ago by <a href="#">Jane Doe</a></p>
+			</header>
+			<p>Nullam posuere erat vel placerat rutrum. Praesent ac consectetur dui, et congue quam. Donec aliquam lacinia condimentum. Integer porta massa sapien, commodo sodales diam suscipit vitae. Aliquam quis felis sed urna semper semper. Phasellus eu scelerisque mi. Vivamus aliquam nisl libero, sit amet scelerisque ligula laoreet vel.</p>
+			<ul class="actions">
+				<li><a href="generic.html" class="button alt">Read More</a></li>
+			</ul>
+		</div>
+		<div class="postnav">
+			<a href="#one" class="scrolly prev"><span class="icon fa-chevron-up"></span></a>
+			<a href="#three" class="scrolly next"><span class="icon fa-chevron-down"></span></a>
+		</div>
+	</div>
+</article>
+
+<!-- Three -->
+<article id="three" class="post style2">
+	<div class="image">
+		<img src="/static/images/pic12.jpg" alt="" data-position="80% center" />
+	</div>
+	<div class="content">
+		<div class="inner">
+			<header>
+				<h2><a href="generic.html">Sed tempus interdum</a></h2>
+				<p class="info">3 days ago by <a href="#">Jane Doe</a></p>
+			</header>
+			<p>Nullam posuere erat vel placerat rutrum. Praesent ac consectetur dui, et congue quam. Donec aliquam lacinia condimentum. Integer porta massa sapien, commodo sodales diam suscipit vitae. Aliquam quis felis sed urna semper semper. Phasellus eu scelerisque mi. Vivamus aliquam nisl libero, sit amet scelerisque ligula laoreet vel.</p>
+			<ul class="actions">
+				<li><a href="generic.html" class="button alt">Read More</a></li>
+			</ul>
+		</div>
+		<div class="postnav">
+			<a href="#two" class="scrolly prev"><span class="icon fa-chevron-up"></span></a>
+			<a href="#four" class="scrolly next"><span class="icon fa-chevron-down"></span></a>
+		</div>
+	</div>
+</article>
+
+<!-- Four -->
+<article id="four" class="post invert style2 alt">
+	<div class="image">
+		<img src="/static/images/pic14.jpg" alt="" data-position="60% center" />
+	</div>
+	<div class="content">
+		<div class="inner">
+			<header>
+				<h2><a href="generic.html">Adipiscing sed urna</a></h2>
+				<p class="info">3 days ago by <a href="#">Jane Doe</a></p>
+			</header>
+			<p>Nullam posuere erat vel placerat rutrum. Praesent ac consectetur dui, et congue quam. Donec aliquam lacinia condimentum. Integer porta massa sapien, commodo sodales diam suscipit vitae. Aliquam quis felis sed urna semper semper. Phasellus eu scelerisque mi. Vivamus aliquam nisl libero, sit amet scelerisque ligula laoreet vel.</p>
+			<ul class="actions">
+				<li><a href="generic.html" class="button alt">Read More</a></li>
+			</ul>
+		</div>
+		<div class="postnav">
+			<a href="#three" class="scrolly prev"><span class="icon fa-chevron-up"></span></a>
+			<a href="#five" class="scrolly next"><span class="icon fa-chevron-down"></span></a>
+		</div>
+	</div>
+</article>
+
+<!-- Five -->
+<article id="five" class="post style3">
+	<div class="image">
+		<img src="/static/images/pic13.jpg" alt="" data-position="5% center" />
+	</div>
+	<div class="content">
+		<div class="inner">
+			<header>
+				<h2><a href="generic.html">Interdum et rutrum</a></h2>
+				<p class="info">3 days ago by <a href="#">Jane Doe</a></p>
+			</header>
+			<p>Nullam posuere erat vel placerat rutrum. Praesent ac consectetur dui, et congue quam. Donec aliquam lacinia condimentum. Integer porta massa sapien, commodo sodales diam suscipit vitae. Aliquam quis felis sed urna semper semper. Phasellus eu scelerisque mi. Vivamus aliquam nisl libero, sit amet scelerisque ligula laoreet vel.</p>
+			<ul class="actions">
+				<li><a href="generic.html" class="button alt">Read More</a></li>
+			</ul>
+		</div>
+		<div class="postnav">
+			<a href="#four" class="scrolly prev"><span class="icon fa-chevron-up"></span></a>
+			<a href="#six" class="scrolly next"><span class="icon fa-chevron-down"></span></a>
+		</div>
+	</div>
+</article>
+
+<!-- Six -->
+<article id="six" class="post invert style3 alt">
+	<div class="image">
+		<img src="/static/images/pic12.jpg" alt="" data-position="80% center" />
+	</div>
+	<div class="content">
+		<div class="inner">
+			<header>
+				<h2><a href="generic.html">Magna porta aliquam</a></h2>
+				<p class="info">3 days ago by <a href="#">Jane Doe</a></p>
+			</header>
+			<p>Nullam posuere erat vel placerat rutrum. Praesent ac consectetur dui, et congue quam. Donec aliquam lacinia condimentum. Integer porta massa sapien, commodo sodales diam suscipit vitae. Aliquam quis felis sed urna semper semper. Phasellus eu scelerisque mi. Vivamus aliquam nisl libero, sit amet scelerisque ligula laoreet vel.</p>
+			<ul class="actions">
+				<li><a href="generic.html" class="button alt">Read More</a></li>
+			</ul>
+		</div>
+		<div class="postnav">
+			<a href="#five" class="scrolly prev"><span class="icon fa-chevron-up"></span></a>
+			<a href="#" class="scrolly next disabled"><span class="icon fa-chevron-down"></span></a>
+		</div>
+	</div>
+</article>
+
+{#<!-- Footer -->#}
+{#<footer id="footer">#}
+{#	<ul class="icons">#}
+{#		<li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a></li>#}
+{#		<li><a href="#" class="icon fa-facebook"><span class="label">Facebook</span></a></li>#}
+{#		<li><a href="#" class="icon fa-instagram"><span class="label">Instagram</span></a></li>#}
+{#	</ul>#}
+{#	<div class="copyright">Copyright &copy; 2016.Company name All rights reserved.<a target="_blank" href="http://sc.chinaz.com/moban/">&#x7F51;&#x9875;&#x6A21;&#x677F;</a></div>#}
+{#</footer>#}
+
+<!-- Scripts -->
+<script src="/static/js/jquery-3.2.1.min.js"></script>
+<script src="/static/js/jquery.scrolly.min.js"></script>
+<script src="/static/js/skel.min.js"></script>
+<script src="/static/js/util.js"></script>
+<script src="/static/js/main.js"></script>
 
 </body>
 </html>

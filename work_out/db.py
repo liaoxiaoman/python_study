@@ -13,6 +13,11 @@ class fields:
         if required == True:
             res += ' NOT NULL'
         return res
+    def float(self, field=None, required=False):
+        res = ',%s REAL'%field
+        if required == True:
+            res += ' NOT NULL'
+        return res
     def many2one(self, field, table, required=False):
         x = """
             ,CONSTRAINT fk_%s  

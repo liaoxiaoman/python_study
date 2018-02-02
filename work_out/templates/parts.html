@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title></title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="/static/css/main.css" />
+</head>
+<body>
+
+<!-- Header -->
+<header id="header">
+	<a href="" class="logo"><strong>M</strong></a>
+	<nav>
+		<a href="#menu">菜单</a>
+	</nav>
+</header>
+
+<!-- Nav -->
+<nav id="menu">
+	<ul class="links">
+		<li><a href="{{ data.first_page_href }}">主页</a></li>
+	</ul>
+</nav>
+
+<!-- Main -->
+<section id="main">
+    <div class="inner">
+        <section>
+            <a href="javascript:create_item({{data.part_id}})" style="float:right;">新建</a>
+            <h3>选择动作</h3>
+            <div class="row">
+                <div class="6u$ 12u$(xsmall)">
+                    {% for item in data.item_lists %}
+                        <ul class="actions fit small">
+                            <li><a href="/select_item/{{ item.ID }}" class="button alt fit small">{{ item.name }}</a></li>
+                        </ul>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+	</div>
+</section>
+
+<!-- Scripts -->
+<script src="/static/js/jquery-3.2.1.min.js"></script>
+<script src="/static/js/jquery.scrolly.min.js"></script>
+<script src="/static/js/skel.min.js"></script>
+<script src="/static/js/util.js"></script>
+<script src="/static/js/main.js"></script>
+<script src="/static/js/index.js"></script>
+
+</body>
+</html>
