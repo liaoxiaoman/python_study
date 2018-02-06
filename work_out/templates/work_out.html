@@ -5,12 +5,12 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="stylesheet" href="/static/css/main.css" />
+<link rel="stylesheet" href="/static/css/bootstrap.min.css" />
 </head>
 <body>
 
 <!-- Header -->
 <header id="header">
-	<a href="#" class="logo"><strong>M</strong></a>
 	<nav>
 		<a href="#menu">菜单</a>
 	</nav>
@@ -20,6 +20,7 @@
 <nav id="menu">
 	<ul class="links">
 		<li><a href="{{ data.first_page_href }}">主页</a></li>
+		<li><a href="/">注销</a></li>
 	</ul>
 </nav>
 
@@ -28,48 +29,28 @@
 <section id="main">
     <div class="inner">
         <section>
-            <a href="#" style="float:right;">更多</a>
-            <h3>近期运动</h3>
+            <a href="/get_details" style="float:right;">更多</a>
+            <h3>近一周运动量</h3>
             <div class="table-wrapper">
                 <table>
                     <thead>
                         <tr>
-                            <th>日期</th>
                             <th>部位</th>
-                            <th>训练总量</th>
+                            <th>训练总量(kg*t)</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>1月9日</td>
-                            <td>背</td>
-                            <td>1800kg</td>
-                        </tr>
-                        <tr>
-                            <td>1月9日</td>
-                            <td>背</td>
-                            <td>1800kg</td>
-                        </tr>
-                        <tr>
-                            <td>1月9日</td>
-                            <td>背</td>
-                            <td>1800kg</td>
-                        </tr>
-                        <tr>
-                            <td>1月9日</td>
-                            <td>背</td>
-                            <td>1800kg</td>
-                        </tr>
-                        <tr>
-                            <td>1月9日</td>
-                            <td>背</td>
-                            <td>1800kg</td>
-                        </tr>
+                        {% for part in data.parts %}
+                            <tr>
+                                <td>{{ part.name }}</td>
+                                <td>{{ part.total }}</td>
+                            </tr>
+                        {% endfor %}
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="2"></td>
-                            <td>8899kg</td>
+                            <td colspan="1"></td>
+                            <td>{{ data.all_total }}</td>
                         </tr>
                     </tfoot>
                 </table>

@@ -3569,10 +3569,18 @@
 
 		}
 
+/* top-location */
+
+	.top-location {
+		margin-bottom: 20px;
+	}
+	.top-location a {
+		color: black;
+	}
 /* Main */
 
 	#main {
-		padding: 4em 0 2em 0;
+		padding: 1em 0 2em 0;
 	}
 
 		#main .inner {
@@ -4546,3 +4554,7 @@
 			}
 
 		}
+
+.delete-action{display: none;}
+
+#cancel{display: none;}

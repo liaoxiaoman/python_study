@@ -22,7 +22,7 @@ class fields:
         x = """
             ,CONSTRAINT fk_%s  
             FOREIGN KEY (%s)  
-            REFERENCES %s(ID)  
+            REFERENCES %s(ID)  on delete cascade 
             """ % (field, field, table)
         res = ',%s INT'%field
         if required == True:
@@ -123,6 +123,15 @@ class db_api:
         print "Record update successfully"
         return True
 
+    def delete(self, table, id):
+        conn = sqlite3.connect(self.db)
+        c = conn.cursor()
+        sql_str = "DELETE FROM %s WHERE ID = %d" % (table, int(id))
+        c.execute(sql_str)
+        conn.commit()
+        conn.close()
+        print "Record delete successfully"
+        return True
 
 db_api = db_api()
 fields = fields()

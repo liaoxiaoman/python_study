@@ -25,19 +25,37 @@
         }
         // 新建部位
         function create_part(user_id){
-            new_name = prompt("请输入新建部位名称:","背部");
-            res = self.post('/create_part', {'user_id': user_id, 'name': new_name});
+            new_name = prompt("请输入新建部位名称:","");
+            if(new_name){
+                res = self.post('/create_part', {'user_id': user_id, 'name': new_name});
+            }
         }
         // 新建动作
         function create_item(part_id){
-            new_name = prompt("请输入新建动作名称:","引体向上");
-            res = self.post('/create_item', {'part_id': part_id, 'name': new_name})
+            new_name = prompt("请输入新建动作名称:","");
+            if(new_name){
+                res = self.post('/create_item', {'part_id': part_id, 'name': new_name})
+            }
         }
         // 新建记录
         function create_record(item_id){
             weight = $('#weight').val();
             count = $('#count').val();
-            res = self.post('/create_record', {'item_id': item_id, 'weight': weight, 'count': count})
+            if(!isNaN(weight) && !isNaN(count) && weight && count){
+                res = self.post('/create_record', {'item_id': item_id, 'weight': weight, 'count': count});
+            }
+            else{$('#info').show()}
+        }
+        // 删除按钮
+        function display(){
+            $('.delete-action').show();
+            $('#display').hide();
+            $('#cancel').show();
+        }
+        function cancel(){
+            $('.delete-action').hide();
+            $('#cancel').hide();
+            $('#display').show();
         }
 
         $(document).ready(function(){

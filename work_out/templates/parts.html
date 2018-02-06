@@ -5,12 +5,12 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="stylesheet" href="/static/css/main.css" />
+<link rel="stylesheet" href="/static/css/bootstrap.min.css" />
 </head>
 <body>
 
 <!-- Header -->
 <header id="header">
-	<a href="" class="logo"><strong>M</strong></a>
 	<nav>
 		<a href="#menu">菜单</a>
 	</nav>
@@ -20,22 +20,30 @@
 <nav id="menu">
 	<ul class="links">
 		<li><a href="{{ data.first_page_href }}">主页</a></li>
+		<li><a href="/">注销</a></li>
 	</ul>
 </nav>
 
 <!-- Main -->
 <section id="main">
     <div class="inner">
+        <div class="top-location">位置：<a href="{{ data.first_page_href }}">主页</a> ><a href="/start_record">{{data.part.name}}</a> ><a>选择动作</a></div>
         <section>
-            <a href="javascript:create_item({{data.part_id}})" style="float:right;">新建</a>
+            <a id="display" href="javascript:display();" style="float:right;">编辑</a>
+            <a id="cancel" href="javascript:cancel();" style="float:right;">取消</a>
             <h3>选择动作</h3>
             <div class="row">
                 <div class="6u$ 12u$(xsmall)">
                     {% for item in data.item_lists %}
                         <ul class="actions fit small">
                             <li><a href="/select_item/{{ item.ID }}" class="button alt fit small">{{ item.name }}</a></li>
+                            <li class="delete-action" style="display:none;"><a href="/delete_item/{{ item.ID }}"><span class="glyphicon glyphicon-trash"></span></a></li>
                         </ul>
                     {% endfor %}
+                    <ul class="actions fit small">
+                        <li></li>
+                        <li class="delete-action" style="display:none;"><a href="javascript:create_item({{data.part.ID}})"><span class="glyphicon glyphicon-plus"></span></a></li>
+                    </ul>
                 </div>
             </div>
         </section>

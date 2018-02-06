@@ -46,15 +46,20 @@ def signup():
         resp = Response(content)
         return resp
 
-# 首页
-@app.route('/index')
-def index():
+def is_login():
     uid = request.cookies.get('the_work_out_uid')
     cookie = request.cookies.get('the_work_out_cookie')
     if uid and cookie:
         if not db_api.search('user', [('ID', '=', int(uid)), ('cookie', '=', cookie)]):
-            return render_template('login.html')
+            return False
     else:
+        return False
+    return True
+
+# 首页
+@app.route('/index')
+def index():
+    if not is_login():
         return render_template('login.html')
     data = request.values.to_dict()
     user_id = data['uid']
@@ -63,16 +68,33 @@ def index():
     parts_list = []
     for part in parts:
         parts_list.append(part)
-    return render_template('index.html', parts=parts_list, user=user, page='2')
+    return work_out()
 
 # 健身记录 近五天
 @app.route('/work_out')
 def work_out():
+    if not is_login():
+        return render_template('login.html')
     data = {}
     uid = request.cookies.get('the_work_out_uid')
     if uid:
         first_page_href = '/index?uid='+uid
         data['first_page_href'] = first_page_href
+        day_7_ago = datetime.datetime.now() - datetime.timedelta(days=7)
+        day_7_ago_timestamp = time.mktime(day_7_ago.timetuple())
+        parts = db_api.search('part', [('user', '=', int(uid))])
+        all_total = 0.0
+        for part in parts:
+            total = 0.0
+            items = db_api.search('item', [('part', '=', part['ID'])])
+            for item in items:
+                records = db_api.search('record', [('item', '=', item['ID']), ('datetime', '>', day_7_ago_timestamp)])
+                for record in records:
+                    total += record['total']
+            part['total'] = total
+            all_total += total
+        data['parts'] = parts
+        data['all_total'] = all_total
     return render_template('work_out.html', data=data)
 
 # 某日详细记录
@@ -89,6 +111,8 @@ def get_details():
 # 开始记录
 @app.route('/start_record')
 def start_record():
+    if not is_login():
+        return render_template('login.html')
     data = {}
     uid = request.cookies.get('the_work_out_uid')
     if uid:
@@ -105,16 +129,31 @@ def create_part():
     db_api.insert('part', {'user': datax['user_id'], 'name': datax['name']})
     return start_record()
 
+# 删除部位
+@app.route('/delete_part/<part_id>')
+def delete_part(part_id):
+    items = db_api.search('item', [('part', '=', part_id)])
+    for i in items:
+        records = db_api.search('record', [('item', '=', i['ID'])])
+        for r in records:
+            db_api.delete('record', r['ID'])
+        db_api.delete('item', i['ID'])
+    db_api.delete('part', part_id)
+    return start_record()
+
 # 选择部位
 @app.route('/select_part/<part_id>')
 def select_part(part_id):
+    if not is_login():
+        return render_template('login.html')
     data = {}
     uid = request.cookies.get('the_work_out_uid')
     if uid:
+        part = db_api.search('part', [('id', '=', part_id)])[0]
         first_page_href = '/index?uid='+uid
         data['first_page_href'] = first_page_href
         data['uid'] = uid
-        data['part_id'] = part_id
+        data['part'] = part
         items = db_api.search('item', [('part', '=', part_id)])
         data['item_lists'] = items
     return render_template('parts.html', data=data)
@@ -124,6 +163,16 @@ def create_item():
     datax = request.values.to_dict()
     db_api.insert('item', {'part': datax['part_id'], 'name': datax['name']})
     return select_part(datax['part_id'])
+
+# 删除动作
+@app.route('/delete_item/<item_id>')
+def delete_item(item_id):
+    records = db_api.search('record', [('item', '=', item_id)])
+    for r in records:
+        db_api.delete('record', r['ID'])
+    item = db_api.search('item', [('id', '=', item_id)])[0]
+    db_api.delete('item', item_id)
+    return select_part(item['part'])
 
 def make_sort(ret):
     new_ret = []
@@ -139,13 +188,18 @@ def make_sort(ret):
 # 选择动作
 @app.route('/select_item/<item_id>')
 def select_item(item_id):
+    if not is_login():
+        return render_template('login.html')
     data = {}
     uid = request.cookies.get('the_work_out_uid')
     if uid:
+        item = db_api.search('item', [('id', '=', item_id)])[0]
         first_page_href = '/index?uid='+uid
         data['first_page_href'] = first_page_href
         data['uid'] = uid
-        data['item_id'] = item_id
+        data['item'] = item
+        part = db_api.search('part', [('id', '=', item['part'])])[0]
+        data['part'] = part
         min = datetime.datetime.combine(datetime.date.today(), datetime.time.min)
         max = datetime.datetime.combine(datetime.date.today(), datetime.time.max)
         records = db_api.search('record', [('item', '=', item_id), ('datetime', '>', time.mktime(min.timetuple())), ('datetime', '<', time.mktime(max.timetuple()))])
@@ -169,6 +223,12 @@ def create_record():
     now = datetime.datetime.now()
     db_api.insert('record', {'item': datax['item_id'], 'weight': weight, 'count': count, 'total': weight*count, 'datetime': time.mktime(now.timetuple())})
     return select_item(datax['item_id'])
+
+@app.route('/delete_record/<record_id>', methods=['POST', 'GET'])
+def delete_record(record_id):
+    record = db_api.search('record', [('id', '=', record_id)])[0]
+    db_api.delete('record', record_id)
+    return select_item(record['item'])
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True, port=8888)
