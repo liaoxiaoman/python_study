@@ -29,48 +29,29 @@
     <div class="inner">
         <div class="top-location">位置：<a href="{{ data.first_page_href }}">主页</a> ><a>运动量分析</a></div>
         <section>
-            <h3>2018年1月9日</h3>
+            <a id="spread" href="javascript:spread();" style="float:right;">展开</a>
+            <a id="roll" href="javascript:roll();" style="float:right;display:none;">收起</a>
+            <a href="javascript:find_record('yesterday');" class="glyphicon glyphicon-chevron-left" style="font-size:20px;"></a>
+            &nbsp;&nbsp;
+            <input type="date" id="date_input" style="margin-bottom: 10px;"/>
+            &nbsp;&nbsp;
+            <a href="javascript:find_record('tomorrow');" class="glyphicon glyphicon-chevron-right" style="font-size:20px;"></a>
             <div class="table-wrapper">
                 <table>
                     <thead>
                         <tr>
-                            <th>日期</th>
                             <th>部位</th>
+                            <th>动作</th>
+                            <th>重量(kg)</th>
+                            <th>次数</th>
                             <th>训练总量(kg*t)</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>1月9日</td>
-                            <td>背</td>
-                            <td>1800kg</td>
-                        </tr>
-                        <tr>
-                            <td>1月9日</td>
-                            <td>背</td>
-                            <td>1800kg</td>
-                        </tr>
-                        <tr>
-                            <td>1月9日</td>
-                            <td>背</td>
-                            <td>1800kg</td>
-                        </tr>
-                        <tr>
-                            <td>1月9日</td>
-                            <td>背</td>
-                            <td>1800kg</td>
-                        </tr>
-                        <tr>
-                            <td>1月9日</td>
-                            <td>背</td>
-                            <td>1800kg</td>
-                        </tr>
+                    <tbody id="tbody">
+
                     </tbody>
-                    <tfoot>
-                        <tr>
-                            <td colspan="2"></td>
-                            <td>8899kg</td>
-                        </tr>
+                    <tfoot id="tfoot">
+
                     </tfoot>
                 </table>
             </div>
@@ -84,6 +65,7 @@
 <script src="/static/js/skel.min.js"></script>
 <script src="/static/js/util.js"></script>
 <script src="/static/js/main.js"></script>
+<script src="/static/js/index.js"></script>
 
 </body>
 </html>

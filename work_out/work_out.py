@@ -200,9 +200,8 @@ def select_item(item_id):
         data['item'] = item
         part = db_api.search('part', [('id', '=', item['part'])])[0]
         data['part'] = part
-        min = datetime.datetime.combine(datetime.date.today(), datetime.time.min)
-        max = datetime.datetime.combine(datetime.date.today(), datetime.time.max)
-        records = db_api.search('record', [('item', '=', item_id), ('datetime', '>', time.mktime(min.timetuple())), ('datetime', '<', time.mktime(max.timetuple()))])
+        min, max = date_min_max(datetime.date.today())
+        records = db_api.search('record', [('item', '=', item_id), ('datetime', '>', min), ('datetime', '<', max)])
         if len(records) > 1:
             records = make_sort(records)
         index = 1
@@ -229,6 +228,45 @@ def delete_record(record_id):
     record = db_api.search('record', [('id', '=', record_id)])[0]
     db_api.delete('record', record_id)
     return select_item(record['item'])
+
+@app.route('/find_record', methods=['POST', 'GET'])
+def find_record():
+    uid = request.cookies.get('the_work_out_uid')
+    datax = request.values.to_dict()
+    date_str = datax['date_str']
+    if date_str == 'today':
+        date = datetime.datetime.now().date()
+    else:
+        if datax.get('day') == 'yesterday':
+            date = (datetime.datetime.strptime(date_str, '%Y-%m-%d') - datetime.timedelta(days=1)).date()
+        elif datax.get('day') == 'tomorrow':
+            date = (datetime.datetime.strptime(date_str, '%Y-%m-%d') + datetime.timedelta(days=1)).date()
+        else:
+            date = datetime.datetime.strptime(date_str, '%Y-%m-%d').date()
+    min, max = date_min_max(date)
+    parts = db_api.search('part', [('user', '=', uid)])
+    all_total = 0.0
+    for part in parts:
+        records_list = []
+        total = 0.0
+        items = db_api.search('item', [('part', '=', part['ID'])])
+        for item in items:
+            records = db_api.search('record', [('item', '=', item['ID']), ('datetime', '>', min), ('datetime', '<', max)])
+            for record in records:
+                total += record['total']
+                record['item_name'] = item['name']
+            records_list += records
+        part['records_list'] = records_list
+        part['total'] = total
+        all_total += total
+    content = json.dumps({"success": True, 'data': parts, 'total': all_total, 'today': str(date)})
+    return Response(content)
+
+def date_min_max(date):
+    min = datetime.datetime.combine(date, datetime.time.min)
+    max = datetime.datetime.combine(date, datetime.time.max)
+    return time.mktime(min.timetuple()), time.mktime(max.timetuple())
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True, port=8888)
