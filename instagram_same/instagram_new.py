@@ -23,7 +23,7 @@ BASE_URL = 'https://www.instagram.com'
 USER = '/teddysphotos/'
 uid = 'teddysphotos'
 
-NEXT_URL = 'https://www.instagram.com/graphql/query/?query_id={0}&variables={1}'
+NEXT_URL = 'https://www.instagram.com/graphql/query/?query_hash={0}&variables={1}'
 jso = {"id": "", "first": 12, "after": ""}
 proxy = {
     'http': 'http://127.0.0.1:1080',
@@ -41,15 +41,16 @@ def crawl():
             if a_tag.strip().startswith('window'):
                 data = a_tag.split('= {')[1][:-1]  # 获取json数据块
                 js_data = json.loads('{' + data, encoding='utf-8')
-                nodes = js_data["entry_data"]["ProfilePage"][0]["user"]["media"]["nodes"]
-                end_cursor = js_data["entry_data"]["ProfilePage"][0]["user"]["media"]["page_info"]["end_cursor"]
-                has_next = js_data["entry_data"]["ProfilePage"][0]["user"]["media"]["page_info"]["has_next_page"]
-                id = nodes[0]["owner"]["id"]
-                for node in nodes:
-                    click.echo(node["display_src"])
-                    url_dict = {'txt': node['caption'] if 'caption' in node.keys() else '',
-                                'pic':  node['display_src'] if 'display_src' in node.keys() else '',
-                                'date':  node['date'] if 'date' in node.keys() else ''}
+                edges = js_data["entry_data"]["ProfilePage"][0]['graphql']["user"]["edge_owner_to_timeline_media"]["edges"]
+                end_cursor = js_data["entry_data"]["ProfilePage"][0]['graphql']["user"]["edge_owner_to_timeline_media"]["page_info"]["end_cursor"]
+                has_next = js_data["entry_data"]["ProfilePage"][0]['graphql']["user"]["edge_owner_to_timeline_media"]["page_info"]["has_next_page"]
+                id = edges[0]["node"]["owner"]["id"]
+                for edge in edges:
+                    node = edge['node']
+                    click.echo(node["display_url"])
+                    url_dict = {'txt': node['edge_media_to_caption']['edges'][0]['node']['text'] if node['edge_media_to_caption']['edges'] else '',
+                                'pic':  node['display_url'] if 'display_url' in node.keys() else '',
+                                'date':  node['taken_at_timestamp'] if 'date' in node.keys() else ''}
                     # ------尝试获取mp4url------
                     try:
                         mp4_url = '/p/'+node["code"]+'/?taken-by='+uid
@@ -70,7 +71,7 @@ def crawl():
 
                 count = 0
                 # 更多的图片加载
-                while has_next and count <= -1:
+                while has_next and count <= 50:
                     jso["id"] = id
                     jso["after"] = end_cursor
                     text = json.dumps(jso)

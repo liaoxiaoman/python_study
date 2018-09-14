@@ -1,0 +1,72 @@
+12.通过 SQL，您如何按字母顺序选取 Persons 表中 LastName 介于 Adams 和 Carter 的所有记录？
+正确答案：SELECT * FROM Persons WHERE LastName BETWEEN 'Adams' AND 'Carter'
+
+13.哪条 SQL 语句可返回唯一不同的值？
+正确答案：SELECT DISTINCT
+
+16.通过 SQL，您如何向 "Persons" 表插入新的记录？
+正确答案：INSERT INTO Persons VALUES ('Jimmy', 'Jackson')
+
+
+按xx分类，并统计数量
+select xx, count(*) from xxx group by xx
+
+x列的绝对值
+abs(x)
+
+
+in的使用
+select * from x where x.id in (select y.x_id from y)
+
+位长度 bit_length
+字符长度 char_length
+字节长度 length
+字节长度 octet_length(string)
+
+取前5条
+limit 5
+
+cast(number1 as varchar(20))
+cast(number1 as text)
+等价于
+number1::varchar(20)
+number1::text
+
+
+case when 语句和 inner join on 语句
+SELECT
+  th.id,
+  th.heads,
+  bh.legs,
+  th.arms,
+  bh.tails,
+  CASE WHEN th.heads > th.arms or bh.tails > bh.legs
+    THEN 'BEAST'
+    ELSE 'WEIRDO'
+  END as species
+
+FROM top_half th
+
+INNER JOIN bottom_half bh
+on bh.id = th.id
+
+ORDER BY species
+
+generate_series(start, stop, step)
+select generate_series(1, 10)
+
+
+select left(project, commits) as project, right(address, contributors) as address from repositories
+
+WHERE NOT move IN ('Hadoken', 'Shouoken', 'Kikoken')
+
+
+经常要取日期的年，月，日，小时等值，PostgreSQL 提供一个非常便利的EXTRACT函数。
+extract(field from source)   field 表示取的时间对象，source 表示取的日期来源，类型为 timestamp、time 或 interval。
+
+to_char(source, 'yyyy-mm-dd')    source 表示取的日期来源，类型为 timestamp、time 或 interval。
+to_date('2012-05-01 23:59:59','yyyy-mm-dd hh24:mi:ss')
+to_timestamp('2012-05-01 23:59:59','yyyy-mm-dd hh24:mi:ss')
+
+select number from numbers ORDER BY RANDOM()
+
