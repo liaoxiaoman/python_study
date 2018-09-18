@@ -12,3 +12,4 @@ for cont in rawCont:
   for nn in cont.xpath('text()').extract():
     if '1024X576' in nn:
       print nn
+
