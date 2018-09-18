@@ -5,7 +5,7 @@ from scrapy.selector import Selector
 from scrapy.selector import HtmlXPathSelector
 
 res = requests.get('http://diaodiaode.me/rss/feed/28688')
-sel = Selector(text=res.content)
+sel = Selector(text="""""")
 
 rawCont = sel.xpath("//ed2k")
 for cont in rawCont:
